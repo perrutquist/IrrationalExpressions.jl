@@ -22,7 +22,7 @@ This may lead to subtle bugs. For example, `2π*x` will only be correct to about
 
 ## The Solution
 
-With `IrrationalExpressions`, arithmetic operations don't immediately force conversion to Float64. Instead the expression is kept unevaluated until the target type is known.
+Using the `IrrationalExpressions` module, arithmetic operations don't immediately force conversion to Float64. Instead the expression is kept unevaluated until the target type is known.
 
 ```
 julia> using IrrationalExpressions
@@ -42,13 +42,13 @@ julia> BigFloat(π) + BigFloat(-π)
 Downconversion occurs when a floating point value is encountered. The resulting type is that of the floating point value.
 
 ```
-julia> 2*pi
+julia> τ = 2π
 2π = 6.2831853071795...
 
-julia> 2*pi + 0.0
+julia> τ + 0.0
 6.283185307179586
 
-julia> 2*pi + BigFloat(0)
+julia> τ + BigFloat(0)
 6.283185307179586476925286766559005768394338798750211641949889184615632812572396
 ```
 
