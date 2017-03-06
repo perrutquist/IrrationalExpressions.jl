@@ -22,6 +22,7 @@ end
   Expr(:call, op, [Expr(:call, :convert, T, :( x.args[$i] )) for i=1:length(TU.parameters)]...)
 
 promote_rule{T1<:AbstractFloat, T2<:IrrationalExpr}(::Type{T1}, ::Type{T2}) = T1
+promote_rule{T2<:IrrationalExpr}(::Type{BigFloat}, ::Type{T2}) = BigFloat
 
 ## Unary operators
 (+)(x::IrrationalExpr) = x
