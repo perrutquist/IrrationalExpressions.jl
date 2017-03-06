@@ -8,7 +8,7 @@
 
 IrrationalExpressions is a Julia module that makes expressions like `2π` behave as irrational numbers, rather than `Float64`.
 
-# The Problem
+## The Problem
 
 Julia has a few irrational constants, like `π` and `e`. Arbitrary precision packages, like BigFloat, may provide conversion methods that yield these constants with the desired precision. However, any arithmetic operation that happens before conversion defaults to Float64.
 ```
@@ -20,7 +20,7 @@ Float64
 ```
 This may lead to subtle bugs. For example, `2π*x` will only be correct to about 16 decimal places, even if `x` has higher precision. It must be written as `2(π*x)`.
 
-# The Solution
+## The Solution
 
 With `IrrationalExpressions`, arithmetic operations don't immediately force conversion to Float64. Instead the expression is kept unevaluated until the target type is known.
 
@@ -35,17 +35,24 @@ julia> BigFloat(π) + BigFloat(-π)
 0.000000000000000000000000000000000000000000000000000000000000000000000000000000
 ```
 
+## Supported Operations
+
 `+`, `-`, `*` and `/` with `Integer`, `Rational` and `Irrational` are currently supported.
 
 As soon as a floating point value is encountered, downconversion occurs. New floating-point types need not explicitly support conversion from `IrrationalExpr`. Any subtype of `AbstractFloat` that has conversions from `Integer`, `Rational` and `Irrational` along with the necessary arithmetic operations is automatically supported.
 
 ```
-julia> 2*pi # Results in IrrationalExpr
+julia> 2*pi
 2π ≈ 6.283185307179586
 
-julia> ans + 0.0 # Results in Float64
+julia> ans + 0.0
 6.283185307179586
 ```
+
+## To-Do-List
+
+* It would be possible to extend this to things like sqrt(Integer), Integer^Rational, etc.
+* Support for complex-valued irrational expressions, like `pi * im` is still missing.
 
 ## Note
 
