@@ -37,13 +37,13 @@ julia> BigFloat(π) + BigFloat(-π)
 
 `+`, `-`, `*` and `/` with `Integer`, `Rational` and `Irrational` are currently supported.
 
-As soon as a floating point value is encountered, downconversion occurs. New floating-point types need not explicitly support conversion from `IrrationalExpr`. Any type `<: AbstractFloat` that has conversions from `Integer`, `Rational` and `Irrational` along with the necessary arithmetic operations is automatically supported.
+As soon as a floating point value is encountered, downconversion occurs. New floating-point types need not explicitly support conversion from `IrrationalExpr`. Any subtype of `AbstractFloat` that has conversions from `Integer`, `Rational` and `Irrational` along with the necessary arithmetic operations is automatically supported.
 
 ```
-julia> 2*pi
+julia> 2*pi # Results in IrrationalExpr
 2π ≈ 6.283185307179586
 
-julia> ans + 0.0
+julia> ans + 0.0 # Results in Float64
 6.283185307179586
 ```
 
