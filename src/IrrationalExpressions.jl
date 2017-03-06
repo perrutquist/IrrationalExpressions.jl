@@ -12,31 +12,28 @@ rather than to approximately 1.2e-16.
 
 module IrrationalExpressions
 
-# This module has no exports (for now).
-
 import Base: +, -, *, /, convert, promote_rule
 
-immutable IrrationalExpr <: Number
-  op::Symbol
-  args::Tuple
+immutable IrrationalExpr{op, TU<:Tuple} <: Real
+  args::TU
 end
 
-convert{T<:AbstractFloat}(::Type{T}, x::IrrationalExpr) =
-  eval(Expr(:call, x.op, map(a->convert(T,a), x.args)...))
+@generated convert{T<:AbstractFloat,op,TU}(::Type{T}, x::IrrationalExpr{op,TU}) =
+  Expr(:call, op, [Expr(:call, :convert, T, :( x.args[$i] )) for i=1:length(TU.parameters)]...)
 
-promote_rule{T<:AbstractFloat}(::Type{T}, ::Type{IrrationalExpr}) = T
+promote_rule{T1<:AbstractFloat, T2<:IrrationalExpr}(::Type{T1}, ::Type{T2}) = T1
 
 ## Unary operators
 (+)(x::IrrationalExpr) = x
-(-)(x::IrrationalExpr) = IrrationalExpr(:(-), (x,))
-(-)(x::Irrational) = IrrationalExpr(:(-), (x,))
+(-)(x::IrrationalExpr) = IrrationalExpr{:(-),Tuple{IrrationalExpr}}((x,))
+(-)(x::Irrational) = IrrationalExpr{:(-),Tuple{Irrational}}((x,))
 
 ## Binary operators
 ops = (:(+), :(-), :(*), :(/))
 types = (Irrational, IrrationalExpr, Integer, Rational)
 for op in ops, i in eachindex(types), j in eachindex(types)
   if i<=2 || j<=2
-    @eval $op(x::$(types[i]), y::$(types[j])) = IrrationalExpr(Symbol($op), (x,y))
+    @eval $op(x::$(types[i]), y::$(types[j])) = IrrationalExpr{Symbol($op),Tuple{$(types[i]),$(types[j])}}((x,y))
   end
 end
 

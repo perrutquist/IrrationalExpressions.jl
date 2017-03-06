@@ -41,11 +41,7 @@ julia> typeof(2.0*pi)
 Float64
 ```
 
-## Notes
-
-Downconversion to floating point is currently done with eval(). This is a quick
-hack that has the disadvantage that the compiler fails to detect a pure function
-and delays evaluation of things like `2π` until runtime.
+## Note
 
 Loading this module will generate a number of warnings about methods being overwritten.
 It would be nice to be able to turn these warnings off. See https://github.com/JuliaLang/julia/pull/14759
