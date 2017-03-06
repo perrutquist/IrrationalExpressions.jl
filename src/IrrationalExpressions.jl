@@ -48,6 +48,6 @@ getsym{sym}(::Irrational{sym}) = sym
 convert{op,TU}(::Type{Expr}, x::IrrationalExpr{op,TU}) =
   Expr(:call, op, map(getsym,x.args)...)
 
-show(io::IO, x::IrrationalExpr) = print(io, string(convert(Expr, x)), " ≈ ", Float64(x))
+show(io::IO, x::IrrationalExpr) = print(io, string(convert(Expr, x)), " = ", string(Float64(x))[1:end-2], "...")
 
 end # module

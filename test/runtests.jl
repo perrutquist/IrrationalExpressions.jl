@@ -8,4 +8,4 @@ using Base.Test
 @test isa(π+1, IrrationalExpressions.IrrationalExpr)
 @test isa(π+1.0, Float64)
 
-@test string(1+pi) == "1 + π ≈ 4.141592653589793"
+@test string(1+pi) == "1 + π = 4.1415926535897..."

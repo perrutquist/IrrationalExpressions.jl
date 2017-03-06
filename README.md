@@ -29,7 +29,7 @@ julia> using IrrationalExpressions
 <A bunch of warnings...>
 
 julia> -pi
--π ≈ -3.141592653589793
+-π = -3.1415926535897...
 
 julia> BigFloat(π) + BigFloat(-π)
 0.000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -43,7 +43,7 @@ Downconversion occurs when a floating point value is encountered. The resulting 
 
 ```
 julia> 2*pi
-2π ≈ 6.283185307179586
+2π = 6.2831853071795...
 
 julia> 2*pi + 0.0
 6.283185307179586
@@ -52,7 +52,7 @@ julia> 2*pi + BigFloat(0)
 6.283185307179586476925286766559005768394338798750211641949889184615632812572396
 ```
 
-Functions in `Base.Math` typically convert to `Float64` when encountering an unknown subtype of `Real`.
+Functions in `Base.Math` typically convert to `Float64` when encountering an unknown subtype of `Real`. They will work as usual.
 
 ```
 julia> cos(2π)
