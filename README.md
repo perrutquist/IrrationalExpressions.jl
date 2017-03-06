@@ -27,5 +27,25 @@ julia> typeof(-π)
 IrrationalExpressions.IrrationalExpr
 ```
 
+`+`, `-`, `*` and `/` with `Integer`, `Rational` and `Irrational` are
+currently supported.
+
+As soon as a floating point value is encountered, downconversion occurs. It is possible to convert to any floating point type that has the above-mentioned methods, and conversions from the above-mentioned types. New floating-point types need not explicitly support conversion from `IrrationalExpr`.
+
+
+```
+julia> typeof(2*pi)
+IrrationalExpressions.IrrationalExpr
+
+julia> typeof(2.0*pi)
+Float64
+```
+
+## Notes
+
+Downconversion to floating point is currently done with eval(). This is a quick
+hack that has the disadvantage that the compiler fails to detect a pure function
+and delays evaluation of things like `2π` until runtime.
+
 Loading this module will generate a number of warnings about methods being overwritten.
 It would be nice to be able to turn these warnings off. See https://github.com/JuliaLang/julia/pull/14759
