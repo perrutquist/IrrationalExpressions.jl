@@ -10,7 +10,7 @@ IrrationalExpressions is a Julia module that makes expressions like `2π` behave
 
 ## The Problem
 
-Julia has a few irrational constants, like `π` and `e`. Arbitrary precision packages, like BigFloat, may provide conversion methods that yield these constants with the desired precision. However, any arithmetic operation that happens before conversion defaults to Float64.
+Julia has a few irrational constants, like `π` and `e`. Arbitrary precision packages, like BigFloat, may provide conversion methods that yield these constants with the desired precision. However, any arithmetic operation that happens before conversion defaults to `Float64`.
 ```
 julia> BigFloat(π) + BigFloat(-π) # We might expect this to be 0.
 1.224646799147353177226065932275001058209749445923078164062861980294536250318213e-16
@@ -18,7 +18,7 @@ julia> BigFloat(π) + BigFloat(-π) # We might expect this to be 0.
 julia> typeof(-π)
 Float64
 ```
-This may lead to subtle bugs. For example, `2π*x` will only be correct to about 16 decimal places, even if `x` has higher precision. It must be written as `2(π*x)`.
+This may lead to subtle bugs. For example, `2π*x` will only be correct to about 16 decimal places, even if `x` has higher precision. It must be written as `2(π*x)` in order to get the precision of `x`.
 
 ## The Solution
 
@@ -51,7 +51,7 @@ julia> ans + 0.0
 
 ## To-Do-List
 
-* It would be possible to extend this to things like sqrt(Integer), Integer^Rational, etc.
+* It would be possible to extend this to things like `sqrt(Integer)`, `Integer^Rational`, etc.
 * Support for complex-valued irrational expressions, like `pi * im` is still missing.
 
 ## Note

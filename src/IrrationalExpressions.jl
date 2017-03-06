@@ -14,7 +14,7 @@ module IrrationalExpressions
 
 import Base: +, -, *, /, convert, promote_rule, show
 
-immutable IrrationalExpr{op, TU<:Tuple} <: Number
+immutable IrrationalExpr{op, TU<:Tuple} <: Real
   args::TU
 end
 
