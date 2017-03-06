@@ -8,37 +8,43 @@
 
 IrrationalExpressions is a Julia module that makes expressions like `2π` behave as irrational numbers, rather than `Float64`.
 
-Julia has a few irrational constants, like `π` and `e`. Arbitrary precision packages, like BigFloat, may provide conversion methods that yield these constants with the desired precision. However, any arithmetic operation that happens before conversion defaults to Float64, and this may lead to subtle bugs. For example, `2π*x` will only be correct to about 16 decimal places, even if `x` has higher precision. It must be written as `2(π*x)`.
+# The Problem
 
+Julia has a few irrational constants, like `π` and `e`. Arbitrary precision packages, like BigFloat, may provide conversion methods that yield these constants with the desired precision. However, any arithmetic operation that happens before conversion defaults to Float64.
 ```
 julia> BigFloat(π) + BigFloat(-π) # We might expect this to be 0.
 1.224646799147353177226065932275001058209749445923078164062861980294536250318213e-16
 
 julia> typeof(-π)
 Float64
+```
+This may lead to subtle bugs. For example, `2π*x` will only be correct to about 16 decimal places, even if `x` has higher precision. It must be written as `2(π*x)`.
 
+# The Solution
+
+With `IrrationalExpressions`, arithmetic operations don't immediately force conversion to Float64. Instead the expression is kept unevaluated until the target type is known.
+
+```
 julia> using IrrationalExpressions
 <A bunch of warnings...>
 
+julia> -pi
+-π ≈ -3.141592653589793
+
 julia> BigFloat(π) + BigFloat(-π)
 0.000000000000000000000000000000000000000000000000000000000000000000000000000000
-
-julia> typeof(-π)
-IrrationalExpressions.IrrationalExpr
 ```
 
-`+`, `-`, `*` and `/` with `Integer`, `Rational` and `Irrational` are
-currently supported.
+`+`, `-`, `*` and `/` with `Integer`, `Rational` and `Irrational` are currently supported.
 
-As soon as a floating point value is encountered, downconversion occurs. It is possible to convert to any floating point type that has the above-mentioned methods, and conversions from the above-mentioned types. New floating-point types need not explicitly support conversion from `IrrationalExpr`.
-
+As soon as a floating point value is encountered, downconversion occurs. New floating-point types need not explicitly support conversion from `IrrationalExpr`. Any type `<: AbstractFloat` that has conversions from `Integer`, `Rational` and `Irrational` along with the necessary arithmetic operations is automatically supported.
 
 ```
-julia> typeof(2*pi)
-IrrationalExpressions.IrrationalExpr
+julia> 2*pi
+2π ≈ 6.283185307179586
 
-julia> typeof(2.0*pi)
-Float64
+julia> ans + 0.0
+6.283185307179586
 ```
 
 ## Note

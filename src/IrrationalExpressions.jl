@@ -37,7 +37,8 @@ for op in ops, i in eachindex(types), j in eachindex(types)
   end
 end
 
-# Utility function for converting to Expr
+# Utility function for converting to Expr in a way that makes
+# the string generation work as intended.
 getsym(x) = x
 getsym{sym}(::Irrational{sym}) = sym
 
