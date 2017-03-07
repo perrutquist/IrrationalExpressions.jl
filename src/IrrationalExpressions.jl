@@ -38,16 +38,12 @@ for op in ops, i in eachindex(types), j in eachindex(types)
   end
 end
 
-# Utility function for converting to Expr in a way that makes
-# the string generation work as intended.
-getsym(x) = x
-getsym{sym}(::Irrational{sym}) = sym
+# We define getexpr() as a conveninent middle step to get to strings,
+# but this also alows eval(getexpr(x)) as a roundabout way to get x.
+getexpr(x) = x
+getexpr{sym}(::Irrational{sym}) = sym
+getexpr{op,TU}(x::IrrationalExpr{op,TU}) = Expr(:call, op, map(getexpr,x.args)...)
 
-# We define conversion to Expr as a conveninent way to get strings,
-# but this also alows eval(convert(Expr, x)) as a roundabout way to get x.
-convert{op,TU}(::Type{Expr}, x::IrrationalExpr{op,TU}) =
-  Expr(:call, op, map(getsym,x.args)...)
-
-show(io::IO, x::IrrationalExpr) = print(io, string(convert(Expr, x)), " = ", string(Float64(x))[1:end-2], "...")
+show(io::IO, x::IrrationalExpr) = print(io, string(getexpr(x)), " = ", string(Float64(x))[1:end-2], "...")
 
 end # module
