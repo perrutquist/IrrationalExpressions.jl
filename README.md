@@ -68,10 +68,21 @@ Float64
 Care must be taken so that floats are not accidentally created. `(1//2)π` is an `IrrationalExpr`, but `(1/2)π` is a `Float64`.
 
 New floating-point types need not explicitly support conversion from `IrrationalExpr`.
-Any subtype of `AbstractFloat` that has conversions from `Integer`, `Rational` and `Irrational` along with the necessary arithmetic operations is automatically supported. (However, it may be necessary to add methods to `convert` and/or `promote_rule` to disambiguate if both classes have general conversions.)
+Any subtype of `AbstractFloat` that has conversions from `Integer`, `Rational` and `Irrational` along with the necessary arithmetic operations is automatically supported. (However, it may be necessary to add methods to `convert` and/or `promote_rule` to disambiguate if both types have general conversions.)
+
+## Caveat
+
+Because this is a quick hack, there's no simplification, or elimination of common subexpressions.
+If irrational expressions are inadvertently created in a loop, they can grow exponentially
+```
+julia> a = π; for i=1:5; a = a-a/3; end; a
+((((π - π / 3) - (π - π / 3) / 3) - ((π - π / 3) - (π - π / 3) / 3) / 3) - (((π - π / 3) - (π - π / 3) / 3) - ((π - π / 3) - (π - π / 3) / 3) / 3) / 3) - ((((π - π / 3) - (π - π / 3) / 3) - ((π - π / 3) - (π - π / 3) / 3) / 3) - (((π - π / 3) - (π - π / 3) / 3) - ((π - π / 3) - (π - π / 3) / 3) / 3) / 3) / 3 = 0.41370767454680...
+```
+(The work-around is to convert to the desired floating-point type before entering the loop.)
 
 ## To-Do-List
 
+* There needs to be some way to keep expressions from blowing up in a loop. At minimum, the size should be tracked, and an error thrown at some point.
 * It would be possible to extend this to things like `sqrt(Integer)`, `Integer^Rational`, etc.
 * Support for complex-valued irrational expressions, like `pi * im` is still missing.
 
