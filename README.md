@@ -68,7 +68,7 @@ Float64
 Care must be taken so that floats are not accidentally created. `(1//2)π` is an `IrrationalExpr`, but `(1/2)π` is a `Float64`.
 
 New floating-point types need not explicitly support conversion from `IrrationalExpr`.
-Any subtype of `AbstractFloat` that has conversions from `Integer`, `Rational` and `Irrational` along with the necessary arithmetic operations is automatically supported. (However, it may be necessary to add methods to `convert` and/or `promote_rule` to disambiguate if both types have general conversions.)
+Any subtype of `AbstractFloat` that has conversions from `Integer`, `Rational` and `Irrational`, promotion from `Real` and the necessary arithmetic operations is automatically supported.
 
 ## Caveat
 

@@ -21,9 +21,6 @@ end
 @generated convert{T<:AbstractFloat,op,N}(::Type{T}, x::IrrationalExpr{op,N}) =
   Expr(:call, op, [Expr(:call, :convert, T, :( x.args[$i] )) for i=1:N]...)
 
-promote_rule{T1<:AbstractFloat, T2<:IrrationalExpr}(::Type{T1}, ::Type{T2}) = T1
-promote_rule{T2<:IrrationalExpr}(::Type{BigFloat}, ::Type{T2}) = BigFloat
-
 ## Unary operators
 (+)(x::IrrationalExpr) = x
 (-)(x::IrrationalExpr) = IrrationalExpr{:(-),1}((x,))
@@ -38,12 +35,12 @@ for op in ops, i in eachindex(types), j in eachindex(types)
   end
 end
 
-# We define getexpr() as a conveninent middle step to get to strings,
-# but this also allows eval(getexpr(x)) as a roundabout way to get x.
-getexpr(x) = x
-getexpr{sym}(::Irrational{sym}) = sym
-getexpr{op,N}(x::IrrationalExpr{op,N}) = Expr(:call, op, map(getexpr,x.args)...)
+# We define expr() as a conveninent middle step to get to strings,
+# but this also allows eval(expr(x)) as a roundabout way to get x.
+expr(x) = x
+expr{sym}(::Irrational{sym}) = sym
+expr{op,N}(x::IrrationalExpr{op,N}) = Expr(:call, op, map(expr,x.args)...)
 
-show(io::IO, x::IrrationalExpr) = print(io, string(getexpr(x)), " = ", string(Float64(x))[1:end-2], "...")
+show(io::IO, x::IrrationalExpr) = print(io, string(expr(x)), " = ", string(Float64(x))[1:end-2], "...")
 
 end # module
